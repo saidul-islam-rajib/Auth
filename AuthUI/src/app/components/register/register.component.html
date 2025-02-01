@@ -1,1 +1,112 @@
-<p>register works!</p>
+<div class="outer">
+  <div class="container">
+    <div class="row">
+      <div class="offset-md-2 col-lg-5 col-md-7 offset-lg-4 offset-md-3">
+        <div class="panel border bg-white">
+          <div class="panel-heading">
+            <h3 class="pt-3 font-weight-bold">Register</h3>
+          </div>
+          <div class="panel-body p-3">
+            <form [formGroup]="registerForm">
+              <div class="form-group pt-3">
+                <div
+                  class="input-field"
+                  [class.error]="
+                    registerForm.controls['firstname'].dirty &&
+                    registerForm.hasError('required', 'firstname')
+                  "
+                >
+                  <span class="fa fa-user p-2"></span>
+                  <input
+                    formControlName="firstname"
+                    type="text"
+                    placeholder="First Name"
+                  />
+                </div>
+              </div>
+              <div class="form-group pt-3">
+                <div
+                  class="input-field"
+                  [class.error]="
+                    registerForm.controls['lastname'].dirty &&
+                    registerForm.hasError('required', 'lastname')
+                  "
+                >
+                  <span class="fa fa-user p-2"></span>
+                  <input
+                    formControlName="lastname"
+                    type="text"
+                    placeholder="Last Name"
+                  />
+                </div>
+              </div>
+              <div class="form-group pt-3">
+                <div
+                  class="input-field"
+                  [class.error]="
+                    registerForm.controls['username'].dirty &&
+                    registerForm.hasError('required', 'username')
+                  "
+                >
+                  <span class="fa fa-user p-2"></span>
+                  <input
+                    formControlName="username"
+                    type="text"
+                    placeholder="User Name"
+                  />
+                </div>
+              </div>
+              <div class="form-group pt-3">
+                <div
+                  class="input-field"
+                  [class.error]="
+                    registerForm.controls['email'].dirty &&
+                    registerForm.hasError('required', 'email')
+                  "
+                >
+                  <span class="fa fa-user p-2"></span>
+                  <input
+                    formControlName="email"
+                    type="text"
+                    placeholder="Email"
+                  />
+                </div>
+              </div>
+              <div class="form-group pt-3">
+                <div
+                  class="input-field"
+                  [class.error]="
+                    registerForm.controls['password'].dirty &&
+                    registerForm.hasError('required', 'password')
+                  "
+                >
+                  <span class="fa fa-lock p-2"></span>
+                  <input
+                    formControlName="password"
+                    [type]="type"
+                    placeholder="Password"
+                  />
+                  <span
+                    (click)="hideShowPass()"
+                    class="fa {{ eyeIcon }}"
+                  ></span>
+                </div>
+              </div>
+              <button
+              (click)="onSubmit()"
+                type="submit"
+                class="btn btn-primary btn-block mt-4 w-100"
+              >
+                Register
+              </button>
+              <div class="test-center pt-4 text-muted">
+                Already have account?
+                <a id="forget" [routerLink]="['/login']">Login</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
