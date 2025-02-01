@@ -9,13 +9,27 @@ import {
 import { CommonModule } from '@angular/common';
 import ValidateForm from '../../helpers/validateForm';
 import { AuthService } from '../../services/auth.service';
+import { NgToastService } from 'ng-angular-popup';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, RouterModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+  styleUrls: ['./login.component.scss'],
+  animations: [
+    trigger('showHide', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms', style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        style({ opacity: 1 }),
+        animate('300ms', style({ opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class LoginComponent implements OnInit {
   type: string = 'password';
@@ -26,7 +40,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private toast: NgToastService
   ) {}
 
   ngOnInit(): void {
@@ -38,23 +53,21 @@ export class LoginComponent implements OnInit {
 
   onLogin() {
     if (this.loginForm.valid) {
-      console.log('Login data : ', this.loginForm.value);
-      // send to backend
-
       this.authService.login(this.loginForm.value)
       .subscribe({
-        next: () => {
+        next: (response) => {
+          this.toast.success('success', response.messsage, 3000 );
+
           this.loginForm.reset();
           this.router.navigate(['/dashboard']);
         },
         error: (err) => {
-          alert(err.error.message);
+          this.toast.success('error', err.error.message, 3000 );
         }
       })
     } else {
-      console.log('invalid form');
       ValidateForm.validateFormFields(this.loginForm);
-      alert('Your form is invalid');
+      this.toast.warning('warning', 'Invalid login form', 3000 );
     }
   }
 
