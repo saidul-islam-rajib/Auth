@@ -9,6 +9,7 @@ import {
 import { Router, RouterModule } from '@angular/router';
 import ValidateForm from '../../helpers/validateForm';
 import { AuthService } from '../../services/auth.service';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-register',
@@ -26,7 +27,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private toast: NgToastService
   ) {}
 
   ngOnInit(): void {
@@ -41,11 +43,11 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     if (this.registerForm.valid) {
-      console.log('Valid form ', this.registerForm.value);
       this.authService.register(this.registerForm.value)
       .subscribe({
         next: (response) => {
-          alert(response.message);
+          this.toast.success('SUCCESS', response.message, 3000);
+
           this.registerForm.reset();
           this.router.navigate(['/login']);
         },
@@ -55,7 +57,7 @@ export class RegisterComponent implements OnInit {
       })
     } else {
       ValidateForm.validateFormFields(this.registerForm);
-      alert('Invalid registration form');
+      this.toast.warning('WARNING', 'Invalid registration form', 3000);
     }
   }
 
