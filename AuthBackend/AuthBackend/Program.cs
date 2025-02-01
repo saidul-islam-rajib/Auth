@@ -1,11 +1,27 @@
+using AuthBackendd.Context;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CustomPolicy", builder =>
+    {
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
+});
+
+// configure services
+builder.Services.AddDbContext<AuthDbContext>(option =>
+{
+    option.UseSqlServer(builder.Configuration.GetConnectionString("Database"));
+});
 
 var app = builder.Build();
 
@@ -17,9 +33,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("CustomPolicy");
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
