@@ -11,23 +11,21 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
-  constructor(
-    private api: ApiService,
-    private auth: AuthService
-  ) {}
+  public users: any = [];
+  constructor(private api: ApiService, private auth: AuthService) {}
 
   ngOnInit(): void {
     this.api.getAllUsers().subscribe({
       next: (response) => {
-        console.log('List of users : ', response);
+        this.users = response;
       },
       error: (err) => {
-        console.log('Error', err.error.message);
+        console.log('Error in dashboard', err);
       },
     });
   }
 
-  logout(){
+  logout() {
     this.auth.logout();
   }
 }
