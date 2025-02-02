@@ -53,7 +53,7 @@ export class AuthService {
 
   getFullNameFromToken() {
     if (this.userPayload) {
-      return this.userPayload.family_name;
+      return this.userPayload.name;
     }
   }
   getRoleFromToken() {
