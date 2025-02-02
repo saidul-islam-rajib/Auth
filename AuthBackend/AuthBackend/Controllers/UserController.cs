@@ -22,6 +22,13 @@ public class UserController : ControllerBase
         _context = context;
     }
 
+    [HttpGet]
+    public async Task<ActionResult<User>> GetAllUsers()
+    {
+        var response = await _context.Users.ToListAsync();
+        return Ok(response);
+    }
+
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] User user)
     {
