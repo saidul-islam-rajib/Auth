@@ -1,6 +1,16 @@
 <button (click)="logout()" type="submit" class="btn btn-danger btn-block mt-4">
   Logout
 </button>
+
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand">Auth</a>
+    <div>
+      <h4>Hello, {{ loggedUser }}</h4>
+    </div>
+  </div>
+</nav>
+
 <ul *ngFor="let user of users">
   <li>{{ user.email }}</li>
 </ul>

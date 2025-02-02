@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
+import { UserStoreService } from '../../services/user-store.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,7 +13,12 @@ import { AuthService } from '../../services/auth.service';
 })
 export class DashboardComponent implements OnInit {
   public users: any = [];
-  constructor(private api: ApiService, private auth: AuthService) {}
+  public loggedUser: string = "";
+  constructor(
+    private api: ApiService,
+    private auth: AuthService,
+    private userStore: UserStoreService
+  ) {}
 
   ngOnInit(): void {
     this.api.getAllUsers().subscribe({
@@ -23,6 +29,12 @@ export class DashboardComponent implements OnInit {
         console.log('Error in dashboard', err);
       },
     });
+
+    this.userStore.getFullNameFromStore()
+    .subscribe(val => {
+      let familyName = this.auth.getFullNameFromToken();
+      this.loggedUser = familyName || val;
+    })
   }
 
   logout() {
