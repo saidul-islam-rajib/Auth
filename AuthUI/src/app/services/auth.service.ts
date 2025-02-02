@@ -15,4 +15,14 @@ export class AuthService {
   login(user: any) {
     return this.http.post<any>(`${this.baseUrl}login`, user);
   }
+
+  storeToken(tokenValue: string){
+    localStorage.setItem('token', tokenValue);
+  }
+  getToken(){
+    return localStorage.getItem('token');
+  }
+  isLoggedIn(): boolean{
+    return !!localStorage.getItem('token')
+  }
 }

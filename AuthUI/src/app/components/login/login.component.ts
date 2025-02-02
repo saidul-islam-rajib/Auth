@@ -56,7 +56,8 @@ export class LoginComponent implements OnInit {
       this.authService.login(this.loginForm.value)
       .subscribe({
         next: (response) => {
-          this.toast.success('success', 'Login Success', 3000 );
+          this.toast.success('success', response.message, 3000 );
+          this.authService.storeToken(response.token);
 
           this.loginForm.reset();
           this.router.navigate(['/dashboard']);
