@@ -1,6 +1,7 @@
 ﻿using AuthBackendd.Context;
 using AuthBackendd.Helper;
 using AuthBackendd.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -23,7 +24,8 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<User>> GetAllUsers()
+    [Authorize]
+    public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
     {
         var response = await _context.Users.ToListAsync();
         return Ok(response);
@@ -150,8 +152,8 @@ public class UserController : ControllerBase
             };
 
         var securityToken = new JwtSecurityToken(
-            issuer: "Rajib",
-            audience: "sober.org.bd",
+            issuer: "sober.org.bd",
+            audience: "Rajib",
             expires: DateTime.UtcNow.AddMinutes(60),
             claims: claims,
             signingCredentials: signingCredentials);
