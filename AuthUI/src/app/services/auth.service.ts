@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class AuthService {
-  private baseUrl: string = 'https://localhost:7015/api/User/';
+  private baseUrl: string = 'https://localhost:7044/api/User/';
   constructor(private http: HttpClient) {}
 
   register(user: any) {

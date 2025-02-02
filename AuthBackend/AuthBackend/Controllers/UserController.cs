@@ -3,6 +3,9 @@ using AuthBackendd.Helper;
 using AuthBackendd.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -41,8 +44,16 @@ public class UserController : ControllerBase
             });
         }
 
-        return Ok(userInformation);
+        user.Token = GenerateToken(userInformation);
+
+        return Ok(new
+        {
+            Token = user.Token,
+            Message = "Login Success"
+        });
     }
+
+    
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] User user)
@@ -115,5 +126,29 @@ public class UserController : ControllerBase
     private async Task<bool> IsEmailExists(string email)
     {
         return await _context.Users.AnyAsync(x => x.Email == email);
+    }
+    private string GenerateToken(User user)
+    {
+        var signingCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes("your-very-secure-and-long-key-string-here-32-chars")),
+                SecurityAlgorithms.HmacSha256);
+
+        var claims = new[]
+        {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.GivenName, $"{user.FirstName} {user.LastName}"),
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+
+        var securityToken = new JwtSecurityToken(
+            issuer: "Rajib",
+            audience: "sober.org.bd",
+            expires: DateTime.UtcNow.AddMinutes(60),
+            claims: claims,
+            signingCredentials: signingCredentials);
+
+        return new JwtSecurityTokenHandler().WriteToken(securityToken);
     }
 }
