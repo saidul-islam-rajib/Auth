@@ -99,7 +99,7 @@ public class UserController : ControllerBase
         }
 
         user.Password = PasswordHasher.HashPassword(user.Password);
-        user.Role = "Admin";
+        user.Role = user.Role ?? "User";
         user.Token = "";
 
         await _context.Users.AddAsync(user);
@@ -146,7 +146,8 @@ public class UserController : ControllerBase
         var claims = new[]
         {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.GivenName, $"{user.FirstName} {user.LastName}"),
+                new Claim(JwtRegisteredClaimNames.Name, $"{user.FirstName} {user.LastName}"),
+                new Claim(JwtRegisteredClaimNames.FamilyName, user.FirstName),
                 new Claim("role", user.Role),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
